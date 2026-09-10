@@ -4,6 +4,7 @@
 
 - **Author**: Sandeep Kumar
 - **Contact Email**: sandeepkumarnitrr@gmail.com
+- **Video Walkthrough (Loom)**: [https://www.loom.com/share/6a41302871894686898bc493c147e1ed](https://www.loom.com/share/6a41302871894686898bc493c147e1ed)
 - **Assignment**: CipherSchools Low-Level Design Practice Platform
 
 ---

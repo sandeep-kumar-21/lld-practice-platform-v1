@@ -7,6 +7,7 @@ Built for the **CipherSchools 2-Day Engineering Assignment**.
 - **Author**: Sandeep Kumar
 - **Contact Email**: sandeepkumarnitrr@gmail.com
 - **Repository**: [https://github.com/sknitrr/lld-practice-platform-v1](https://github.com/sknitrr/lld-practice-platform-v1)
+- **Video Walkthrough (Loom)**: [Watch the Platform Demo (Loom)](https://www.loom.com/share/6a41302871894686898bc493c147e1ed)
 
 ---
 
@@ -16,6 +17,7 @@ All core deliverables required by the assignment specification are provided in t
 
 | Deliverable | Location | Description |
 | :--- | :--- | :--- |
+| **Video Walkthrough** | [Watch Loom Demo](https://www.loom.com/share/6a41302871894686898bc493c147e1ed) | Comprehensive walkthrough demonstrating the interactive practice workspace, multi-language editor, asynchronous background evaluation, version delta review, and longitudinal analytics. |
 | **Research Note** | [`RESEARCH_NOTE.md`](./RESEARCH_NOTE.md) & [`docs/research-note.md`](./docs/research-note.md) | In-depth analysis of the learner problem in LLD, comparative matrix of existing tools (LeetCode, Educative, GitHub repos, unconstrained LLMs), 4 critical industry gaps, and product direction. |
 | **Design Note** | [`DESIGN_NOTE.md`](./DESIGN_NOTE.md) & [`docs/design-note.md`](./docs/design-note.md) | MVP scope, user flow, class responsibilities, formal UML diagram, Change Test A & B proof, two-phase deterministic vs. architectural evaluation, exact weighted scoring formula, and answers to the 5 core assignment questions. |
 | **ADR Records** | [`docs/adr/`](./docs/adr/) | 4 Architecture Decision Records (`ADR-001` Format Choice, `ADR-002` Polling vs. WebSockets, `ADR-003` Single-Process Worker for Prototype, `ADR-004` Rubric Versioning). |
@@ -433,4 +435,5 @@ Command: `npm test` (or `npx vitest run`)
 - **Developer**: Sandeep Kumar
 - **Email**: [sandeepkumarnitrr@gmail.com](mailto:sandeepkumarnitrr@gmail.com)
 - **Institution**: National Institute of Technology Raipur (NITRR)
+- **Video Walkthrough**: [https://www.loom.com/share/6a41302871894686898bc493c147e1ed](https://www.loom.com/share/6a41302871894686898bc493c147e1ed)
 - **Assignment**: CipherSchools Low-Level Design Practice Platform Assignment
