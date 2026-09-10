@@ -154,7 +154,7 @@ Raw Submission ──► [ Phase 1: Fast Deterministic Pre-Flight ]
                          ├── Pluggable Strategy (RuleBasedEvaluator / LLM / Mock)
                          ├── Assesses SRP, coupling, cohesion, extensibility
                          ├── Formulates concrete suggestions
-                         └── Extracts quoted EVIDENCE from candidate design
+                         └── Extracts quoted EVIDENCE from learner design
                          │
                          ▼
                    [ Phase 3: Resilience & Graceful Degradation ]
@@ -239,7 +239,7 @@ The $0.2$-point significance threshold prevents noisy micro-fluctuations from mi
 > **Answer**: A meaningful attempt requires: (1) Core domain entities and interface definitions; (2) Responsibility assignments (SRP); (3) Design patterns applied to isolate change; and (4) A mandatory **Design Rationale** (2–5 sentences) articulating *why* specific trade-offs were made (e.g. why Strategy over State, or fine-grained locks over synchronized methods). Without the rationale, it is impossible to evaluate whether a design choice was deliberate or accidental.
 
 ### Q2: What makes feedback useful when there can be more than one valid LLD solution?
-> **Answer**: Feedback is useful only when it evaluates **principles, not identity**. Rather than checking if the candidate's classes match a single "reference solution", our platform evaluates against an **invariant 8-criterion rubric** and extracts **quoted evidence** directly from the candidate's submission. Even if Solution A uses the State pattern and Solution B uses Strategy + Enums, both receive high marks if they cleanly decouple state transitions and encapsulate business logic.
+> **Answer**: Feedback is useful only when it evaluates **principles, not identity**. Rather than checking if the learner's classes match a single "reference solution", our platform evaluates against an **invariant 8-criterion rubric** and extracts **quoted evidence** directly from the learner's submission. Even if Solution A uses the State pattern and Solution B uses Strategy + Enums, both receive high marks if they cleanly decouple state transitions and encapsulate business logic.
 
 ### Q3: Which parts of evaluation should be deterministic, and which parts benefit from architectural judgment / heuristics?
 > **Answer**: 

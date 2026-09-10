@@ -8,7 +8,7 @@ Built for the **CipherSchools 2-Day Engineering Assignment**.
 
 ## 1. Assignment Deliverables Index
 
-In accordance with Section 7 and Section 11 of the assignment specification, all core deliverables are provided in the repository:
+All core deliverables required by the assignment specification are provided in the repository:
 
 | Deliverable | Location | Description |
 | :--- | :--- | :--- |

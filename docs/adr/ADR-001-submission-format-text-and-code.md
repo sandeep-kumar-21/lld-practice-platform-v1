@@ -4,7 +4,7 @@
 Accepted
 
 ## Context
-In Low-Level Design (LLD) interviews and assessments, candidates must convey class responsibilities, design patterns, encapsulation, and trade-offs. While graphical UML tools exist, free-form drag-and-drop canvas diagrams introduce heavy drawing friction, lack semantic AST precision, and require complex, error-prone vision LLM processing.
+In Low-Level Design (LLD) practice and assessments, learners must convey class responsibilities, design patterns, encapsulation, and trade-offs. While graphical UML tools exist, free-form drag-and-drop canvas diagrams introduce heavy drawing friction, lack semantic AST precision, and require complex, error-prone vision LLM processing.
 
 ## Decision
 We adopted **Structured Text + Code Implementation** as the primary MVP submission formats, supported by an extensible **Adapter Pattern** (`ISubmissionContentAdapter`):

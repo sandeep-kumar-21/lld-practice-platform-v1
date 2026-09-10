@@ -1,6 +1,6 @@
 # Low-Level Design Practice Platform - AI Usage Report
 
-In accordance with Section 6 of the engineering assignment, this document records **5 meaningful AI-assisted decisions**, detailing what the AI suggested, what was accepted, modified, or rejected, and the technical rationale guiding each decision.
+This document records **5 meaningful AI-assisted decisions**, detailing what the AI suggested, what was accepted, modified, or rejected, and the technical rationale guiding each decision.
 
 ---
 
@@ -11,7 +11,7 @@ In accordance with Section 6 of the engineering assignment, this document record
   - Cloud LLMs on free tiers suffer from strict rate limits (`429 Too Many Requests`), token quotas, regional outages, and 15–30 second network latencies.
   - Relying exclusively on an external cloud API creates a fragile single point of failure that breaks offline developer evaluation and local CI/CD testing.
   - By implementing a self-contained lexical and structural static analyzer that inspects domain entities, SRP boundaries, God Objects, interface contracts, GoF patterns (Strategy, State, Factory, Observer), concurrency primitives, and trade-off rationales, evaluations run in **$< 20$ milliseconds with 100% determinism and \$0 API cost**.
-  - This decision directly demonstrates **Change Test B (Evaluator Strategy Extensibility)** from Section 4 of the assignment specification.
+  - This decision directly demonstrates **Change Test B (Evaluator Strategy Extensibility)** from the assignment specification.
 
 ---
 
