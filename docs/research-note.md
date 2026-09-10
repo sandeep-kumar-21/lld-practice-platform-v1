@@ -54,8 +54,29 @@ If we constrain the practice journey to a **tight, iterative loop** driven by an
 ### The Practice Loop:
 $$\text{Select Problem} \longrightarrow \text{Structure Design \& Rationale} \longrightarrow \text{Submit} \longrightarrow \text{Explainable Rubric Feedback} \longrightarrow \text{Review Delta} \longrightarrow \text{Iterate Revision}$$
 
+### The 8 Canonical Rubric Dimensions:
+To eliminate subjective grading ambiguity, all submissions are judged against 8 invariant architectural dimensions:
+
+| Criterion Key | Focus Area | Learner Dilemma Resolved |
+| :--- | :--- | :--- |
+| **`REQUIREMENT_UNDERSTANDING`** | Scoping functional and non-functional requirements | Prevents scope neglect, unstated assumptions, and gold-plating. |
+| **`CLASS_RESPONSIBILITIES`** | Single Responsibility Principle (SRP) | Detects "God Objects" and ensures classes have a single reason to change. |
+| **`COUPLING_COHESION`** | High cohesion within classes, loose coupling between components | Eliminates circular dependencies and tightly bound internal modules. |
+| **`ENCAPSULATION_INTERFACE_DESIGN`** | Information hiding, explicit public contracts | Prevents leaking implementation details or mutable state across boundaries. |
+| **`EXTENSIBILITY`** | Open-Closed Principle (OCP) | Evaluates how easily new requirements or variants can be added without modifying existing code. |
+| **`ABSTRACTION_AND_PATTERNS`** | GoF design patterns (Strategy, State, Factory, Observer) | Replaces speculative indirection with purposeful patterns that match the problem. |
+| **`EDGE_CASES_TESTABILITY`** | Concurrency, race conditions, null safety, mockability | Highlights multi-threading pitfalls, idempotency failures, and un-testable monolithic blocks. |
+| **`EXPLANATION_QUALITY`** | Trade-off articulation and design rationale | Forces learners to articulate *why* specific trade-offs were made rather than passively copying solutions. |
+
+### Evidence-Backed Feedback Model:
+To prevent vague critique ("improve modularity"), each criterion result in an evaluation must contain three structured attributes:
+1. **Evidence**: Concrete quotes or references to class names, method signatures, or rationale statements directly extracted from the learner's submission.
+2. **Concern**: An objective explanation of the architectural vulnerability, coupling risk, or SOLID violation.
+3. **Suggestion**: An actionable refactoring step that preserves clean boundaries without prescribing a single dogmatic solution.
+
 ### Separation of Concerns:
-- **Deterministic Engine**: Validates structural completeness, required sections, idempotency deduplication, and legal state transitions.
-- **Architectural Evaluation Engine**: Assesses semantic design quality, responsibility allocation, SOLID alignment, and edge-case handling against a fixed rubric, producing structured results with cited evidence quotes.
-- **Analytics Engine**: Aggregates criterion performance across attempts to isolate recurring architectural weaknesses.
+- **Deterministic Engine**: Validates structural completeness, minimum section requirements, SHA-256 idempotency deduplication, and legal state transitions ($<5$ms).
+- **Architectural Evaluation Engine**: Assesses semantic design quality, responsibility allocation, SOLID alignment, and edge-case handling against the 8-criterion rubric, citing exact submission evidence.
+- **Analytics Engine**: Aggregates criterion scores across attempts to surface recurring architectural blind spots (e.g., persistent low scores in `EXTENSIBILITY` or `EDGE_CASES_TESTABILITY`) with targeted practice recommendations.
+
 

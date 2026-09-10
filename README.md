@@ -124,6 +124,10 @@ cd server
 npm install
 
 # 2. Setup environment (uses rule_based engine by default)
+# Linux / macOS:
+cp .env.example .env
+# Windows (CMD / PowerShell):
+copy .env.example .env
 # Ensure DATABASE_URL in .env matches your local MySQL credentials
 # Default: mysql://root:password@localhost:3306/lld_practice_platform
 
@@ -146,7 +150,13 @@ cd client
 # 1. Install dependencies
 npm install
 
-# 2. Start the Next.js development server (Port 3000)
+# 2. Setup environment (optional, defaults to http://localhost:4000)
+# Linux / macOS:
+cp .env.example .env.local
+# Windows (CMD / PowerShell):
+copy .env.example .env.local
+
+# 3. Start the Next.js development server (Port 3000)
 npm run dev
 ```
 - Web Application: [http://localhost:3000](http://localhost:3000)
