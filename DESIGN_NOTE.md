@@ -32,8 +32,8 @@ classDiagram
         -AttemptStatus status
         -Submission[] submissions
         +addSubmission(submission: Submission)
-        +latestSubmission(): Submission
-        +nextVersion(): number
+        +latestSubmission() Submission
+        +nextVersion() number
         +markSubmitted()
         +markAbandoned()
     }
@@ -47,39 +47,13 @@ classDiagram
         -SubmissionStatus status
         -string designRationale
         +transitionTo(nextStatus: SubmissionStatus)
-        +computeContentSignature(): string
+        +computeContentSignature() string
     }
 
     class SubmissionStateMachine {
+        <<service>>
         +assertCanTransition(current, next)
-        +canTransition(current, next): boolean
-    }
-
-    class ISubmissionContentAdapter {
-        <<interface>>
-        +format: string
-        +normalize(raw: unknown): NormalizedSubmissionContent
-        +validateStructure(content): DeterministicCheckResult
-    }
-
-    class ContentAdapterRegistry {
-        -Map~string, ISubmissionContentAdapter~ adapters
-        +register(adapter: ISubmissionContentAdapter)
-        +getRequired(format: string): ISubmissionContentAdapter
-    }
-
-    class IEvaluator {
-        <<interface>>
-        +type: EvaluatorType
-        +supports(format: string): boolean
-        +evaluate(submission: Submission, rubric: Rubric): Promise~EvaluationResult~
-    }
-
-    class EvaluationPipeline {
-        -IEvaluator deterministicEvaluator
-        -IEvaluator judgmentEvaluator
-        -IEvaluator[] secondaryEvaluators
-        +execute(submission, rubric, options): Promise~EvaluationResult~
+        +canTransition(current, next) boolean
     }
 
     class Evaluation {
@@ -95,11 +69,82 @@ classDiagram
         +fail(reason)
     }
 
-    Attempt "1" *-- "many" Submission : manages revisions
-    Submission --> SubmissionStateMachine : enforces invariant
-    Submission --> Evaluation : evaluated into
-    ContentAdapterRegistry o-- ISubmissionContentAdapter : discovers
+    class CriterionResult {
+        +string criterionKey
+        +string criterionName
+        +number score
+        +string evidence
+        +string concern
+        +string suggestion
+    }
+
+    class WeightedScoreCalculator {
+        <<service>>
+        +calculateOverallScore(criteria, results) number
+        +compareVersions(prev, curr) VersionComparison
+    }
+
+    class ISubmissionContentAdapter {
+        <<interface>>
+        +format: string
+        +normalize(raw: unknown) NormalizedSubmissionContent
+        +validateStructure(content) DeterministicCheckResult
+    }
+
+    class TextSubmissionAdapter {
+        +normalize(raw: unknown)
+        +validateStructure(content)
+    }
+
+    class DiagramSubmissionAdapter {
+        +normalize(raw: unknown)
+        +validateStructure(content)
+    }
+
+    class ContentAdapterRegistry {
+        -Map~string, ISubmissionContentAdapter~ adapters
+        +register(adapter: ISubmissionContentAdapter)
+        +getRequired(format: string) ISubmissionContentAdapter
+    }
+
+    class IEvaluator {
+        <<interface>>
+        +type: EvaluatorType
+        +supports(format: string) boolean
+        +evaluate(submission: Submission, rubric: Rubric) Promise~EvaluationResult~
+    }
+
+    class DeterministicEvaluator {
+        +evaluate(submission, rubric)
+    }
+
+    class RuleBasedEvaluator {
+        +evaluate(submission, rubric)
+    }
+
+    class LlmEvaluator {
+        +evaluate(submission, rubric)
+    }
+
+    class EvaluationPipeline {
+        -IEvaluator deterministicEvaluator
+        -IEvaluator judgmentEvaluator
+        -IEvaluator[] secondaryEvaluators
+        +execute(submission, rubric, options) Promise~EvaluationResult~
+    }
+
+    Attempt "1" *-- "*" Submission : manages revisions
+    Submission ..> SubmissionStateMachine : validates transitions via
+    Evaluation "0..1" --> "1" Submission : evaluates
+    Evaluation "1" *-- "*" CriterionResult : contains
+    EvaluationPipeline ..> WeightedScoreCalculator : scores via
+    ContentAdapterRegistry o-- ISubmissionContentAdapter : aggregates
+    TextSubmissionAdapter ..|> ISubmissionContentAdapter : realizes
+    DiagramSubmissionAdapter ..|> ISubmissionContentAdapter : realizes (Change Test A)
     EvaluationPipeline o-- IEvaluator : orchestrates
+    DeterministicEvaluator ..|> IEvaluator : realizes
+    RuleBasedEvaluator ..|> IEvaluator : realizes (Change Test B)
+    LlmEvaluator ..|> IEvaluator : realizes
 ```
 
 ### Responsibility Breakdown:
