@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Problem {
+  id                        String    @id @default(cuid())
+  slug                      String    @unique
+  title                     String
+  description               String    @db.Text
+  difficulty                String    // 'EASY' | 'MEDIUM' | 'HARD'
+  tags                      Json      // string[]
+  functionalRequirements    Json      // string[]
+  nonFunctionalRequirements Json      // string[]
+  constraints               Json      // string[]
+  expectedFormat            String    @default("BOTH") // 'TEXT' | 'CODE' | 'BOTH'
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime  @updatedAt
+
+  attempts                  Attempt[]
+
+  @@map("problems")
+}
+
+model Attempt {
+  id          String       @id @default(cuid())
+  problemId   String
+  userId      String       @default("learner-demo")
+  status      String       @default("IN_PROGRESS") // 'IN_PROGRESS' | 'SUBMITTED' | 'ABANDONED'
+  startedAt   DateTime     @default(now())
+  completedAt DateTime?
+
+  problem     Problem      @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  submissions Submission[]
+
+  @@index([problemId])
+  @@index([userId])
+  @@index([userId, problemId, status])
+  @@map("attempts")
+}
+
+model Submission {
+  id              String      @id @default(cuid())
+  attemptId       String
+  format          String      // 'TEXT' | 'CODE'
+  content         Json        // Polymorphic normalized content
+  version         Int         @default(1)
+  status          String      @default("PENDING") // 'PENDING' | 'EVALUATING' | 'COMPLETED' | 'COMPLETED_PARTIAL' | 'FAILED'
+  designRationale String      @db.Text
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  attempt         Attempt     @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  evaluation      Evaluation?
+
+  @@index([attemptId])
+  @@map("submissions")
+}
+
+model Evaluation {
+  id               String            @id @default(cuid())
+  submissionId     String            @unique
+  evaluatorType    String            // 'DETERMINISTIC_ONLY' | 'LLM' | 'HYBRID' | 'MOCK_LLM'
+  status           String            @default("PENDING") // 'PENDING' | 'COMPLETED' | 'COMPLETED_PARTIAL' | 'FAILED'
+  overallScore     Float             @default(0) // Weighted score (0 - 5)
+  overallSummary   String            @db.Text
+  failureReason    String?           @db.Text
+  startedAt        DateTime          @default(now())
+  completedAt      DateTime?
+
+  submission       Submission        @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  criterionResults CriterionResult[]
+
+  @@map("evaluations")
+}
+
+model Rubric {
+  id          String            @id @default(cuid())
+  version     Int               @unique
+  title       String
+  description String            @db.Text
+  isDefault   Boolean           @default(false)
+  createdAt   DateTime          @default(now())
+
+  criteria    RubricCriterion[]
+
+  @@map("rubrics")
+}
+
+model RubricCriterion {
+  id              String   @id @default(cuid())
+  rubricId        String
+  criterionKey    String
+  name            String
+  description     String   @db.Text
+  weight          Float    // e.g. 0.15
+  appliesToFormat Json     // ['TEXT', 'CODE']
+
+  rubric          Rubric   @relation(fields: [rubricId], references: [id], onDelete: Cascade)
+
+  @@index([rubricId])
+  @@map("rubric_criteria")
+}
+
+model CriterionResult {
+  id            String     @id @default(cuid())
+  evaluationId  String
+  criterionKey  String
+  criterionName String
+  score         Float      // 0 - 5
+  evidence      String     @db.Text
+  concern       String     @db.Text
+  suggestion    String     @db.Text
+  confidence    String     // 'LOW' | 'MEDIUM' | 'HIGH'
+
+  evaluation    Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+
+  @@index([evaluationId])
+  @@map("criterion_results")
+}
+

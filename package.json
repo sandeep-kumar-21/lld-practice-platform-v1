@@ -1,0 +1,31 @@
+{
+  "name": "lld-practice-platform-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Production-grade LLD Practice Platform Monorepo",
+  "scripts": {
+    "dev:server": "npm --prefix server run start:dev",
+    "dev:client": "npm --prefix client run dev",
+    "build:server": "npm --prefix server run build",
+    "build:client": "npm --prefix client run build",
+    "test:server": "npm --prefix server run test",
+    "test:e2e": "npm --prefix server run test:e2e",
+    "prisma:push": "npm --prefix server run prisma:push",
+    "prisma:seed": "npm --prefix server run prisma:seed",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down"
+  },
+  "keywords": [
+    "lld",
+    "practice-platform",
+    "nestjs",
+    "nextjs",
+    "prisma",
+    "mysql",
+    "bullmq",
+    "redis"
+  ],
+  "author": "",
+  "license": "ISC"
+}
+
