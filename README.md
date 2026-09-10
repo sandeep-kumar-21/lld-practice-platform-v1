@@ -80,29 +80,43 @@ The platform supports pluggable evaluation strategies via `LLM_PROVIDER` in `ser
 
 ---
 
-## 5. Local Setup Instructions (Native MySQL + Redis, No Docker)
+## 5. Local Setup Instructions
 
-Per Section 0.1 of the specification, no Docker is required. MySQL and Redis run natively on your machine.
+You can start the required databases (MySQL on port 3306 and Redis on port 6379) using either **Docker Compose** (recommended for quick evaluation) or **natively installed instances**.
 
 ### Prerequisites:
 - **Node.js**: v20.x or higher
-- **MySQL**: Running locally on port `3306`
-- **Redis**: Running locally on port `6379`
+- **MySQL & Redis**: via Docker Compose or native installations
 
-### Step 1: Provision Local MySQL Database
-Open your MySQL client (MySQL Workbench, TablePlus, or CLI) and run:
-```sql
-CREATE DATABASE IF NOT EXISTS lld_practice_platform;
-```
+---
 
-### Step 2: Verify Redis is Running
-In a terminal, verify your local Redis instance:
+### Option A: Using Docker Compose (Quickest)
+Run the following from the project root to start MySQL and Redis in the background:
 ```bash
-redis-cli ping
-# Should return: PONG
+docker compose up -d
+```
+To verify both containers are running and healthy:
+```bash
+docker compose ps
 ```
 
-### Step 3: Backend Setup (`server`)
+---
+
+### Option B: Using Native MySQL & Redis
+If you prefer running natively without Docker:
+1. **MySQL**: Ensure MySQL is running on port `3306` and create the database:
+   ```sql
+   CREATE DATABASE IF NOT EXISTS lld_practice_platform;
+   ```
+2. **Redis**: Ensure Redis is running on port `6379`:
+   ```bash
+   redis-cli ping
+   # Returns: PONG
+   ```
+
+---
+
+### Step 1: Backend Setup (`server`)
 ```bash
 cd server
 
@@ -124,7 +138,7 @@ npm run start:dev
 - Swagger Interactive API Docs: `http://localhost:4000/api/docs`
 - Health Readiness Probe: `http://localhost:4000/health`
 
-### Step 4: Frontend Setup (`client`)
+### Step 2: Frontend Setup (`client`)
 In a second terminal window:
 ```bash
 cd client
