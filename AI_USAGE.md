@@ -1,6 +1,5 @@
 # Low-Level Design Practice Platform - AI Usage Report
 
-This document records **5 meaningful AI-assisted decisions**, detailing what the AI suggested, what was accepted, modified, or rejected, and the technical rationale guiding each decision.
 *This report documents the thoughtful, honest reflection on AI-assisted development required by the assignment specification, detailing what AI got right, where it struggled, human interventions, effective workflows, and 5 meaningful architectural decisions.*
 
 - **Author**: Sandeep Kumar
@@ -41,7 +40,6 @@ This document records **5 meaningful AI-assisted decisions**, detailing what the
 
 ### Decision 1: Autonomous Rule-Based Static Analysis Engine vs. Sole Cloud LLM Dependency
 - **What Was Evaluated**: Relying solely on remote third-party cloud LLM APIs (e.g. OpenAI / Gemini / OpenRouter) for all evaluation logic vs. engineering an autonomous, self-contained Rule-Based Static Analysis Engine.
-- **What Was Decided**: **Engineered an autonomous, AST-like Rule-Based Architectural Evaluator ([`RuleBasedEvaluator`](file:///e:/Assignment_Projects/lld-practice-platform-v1/server/src/domain/evaluators/rule-based.evaluator.ts)) implementing the `IEvaluator` Strategy interface as the primary engine, while retaining pluggable cloud LLM and Mock adapters.**
 - **What Was Decided**: **Engineered an autonomous, AST-like Rule-Based Architectural Evaluator ([`RuleBasedEvaluator`](./server/src/domain/evaluators/rule-based.evaluator.ts)) implementing the `IEvaluator` Strategy interface as the primary engine, while retaining pluggable cloud LLM and Mock adapters.**
 - **Engineering Rationale**:
   - Cloud LLMs on free tiers suffer from strict rate limits (`429 Too Many Requests`), token quotas, regional outages, and 15–30 second network latencies.
@@ -53,7 +51,6 @@ This document records **5 meaningful AI-assisted decisions**, detailing what the
 
 ### Decision 2: Two-Phase Evaluation Pipeline vs. Monolithic Prompt
 - **What the AI Suggested**: Send the raw submission payload, structural validation, completeness checks, and grading rubric directly to an evaluation prompt in a single monolithic pass.
-- **What Was Decided**: **Rejected; engineered a strict two-phase evaluation pipeline separating deterministic pre-flight checks from architectural judgment via [`EvaluationPipeline`](file:///e:/Assignment_Projects/lld-practice-platform-v1/server/src/domain/evaluators/evaluation-pipeline.ts).**
 - **What Was Decided**: **Rejected; engineered a strict two-phase evaluation pipeline separating deterministic pre-flight checks from architectural judgment via [`EvaluationPipeline`](./server/src/domain/evaluators/evaluation-pipeline.ts).**
 - **Engineering Rationale**:
   - Deterministic tasks (verifying section presence, checking minimum word counts, enforcing mandatory design rationale, syntax validation, and state machine guards) should execute with zero token cost and 100% reproducible certainty.
@@ -64,7 +61,6 @@ This document records **5 meaningful AI-assisted decisions**, detailing what the
 
 ### Decision 3: Pluggable Adapter Registry vs. Switch-Case Format Branching
 - **What the AI Suggested**: Use a `switch (submission.format)` block inside evaluators to branch parsing logic between text submissions and code implementations.
-- **What Was Decided**: **Rejected the switch block; engineered the Adapter + Registry pattern ([`ISubmissionContentAdapter`](file:///e:/Assignment_Projects/lld-practice-platform-v1/server/src/domain/adapters/adapter.interface.ts) & [`ContentAdapterRegistry`](file:///e:/Assignment_Projects/lld-practice-platform-v1/server/src/domain/adapters/content-adapter.registry.ts)).**
 - **What Was Decided**: **Rejected the switch block; engineered the Adapter + Registry pattern ([`ISubmissionContentAdapter`](./server/src/domain/adapters/adapter.interface.ts) & [`ContentAdapterRegistry`](./server/src/domain/adapters/content-adapter.registry.ts)).**
 - **Engineering Rationale**:
   - Hardcoding a `switch` statement tightly couples evaluators to current formats and directly violates the Open-Closed Principle (OCP). Adding a new format (e.g. Mermaid/PlantUML diagrams) would require modifying every existing evaluator class.
@@ -84,7 +80,6 @@ This document records **5 meaningful AI-assisted decisions**, detailing what the
 
 ### Decision 5: Guarded State Machine & Idempotency Hash vs. Ad-Hoc Status Mutation
 - **What the AI Suggested**: Directly mutate `submission.status` strings in service methods whenever a status change occurs.
-- **What Was Decided**: **Rejected stringly-typed status mutations; engineered an explicit domain state machine ([`SubmissionStateMachine`](file:///e:/Assignment_Projects/lld-practice-platform-v1/server/src/domain/state-machine/submission-state-machine.ts)) and SHA-256 content fingerprinter.**
 - **What Was Decided**: **Rejected stringly-typed status mutations; engineered an explicit domain state machine ([`SubmissionStateMachine`](./server/src/domain/state-machine/submission-state-machine.ts)) and SHA-256 content fingerprinter.**
 - **Engineering Rationale**:
   - Ad-hoc string assignment allows illegal transitions (e.g. `PENDING` $\to$ `COMPLETED` skipping `EVALUATING`, or mutating a terminal `COMPLETED` submission). The explicit state machine table strictly enforces valid lifecycle transitions and throws domain exceptions on illegal attempts.
