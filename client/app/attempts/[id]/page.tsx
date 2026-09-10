@@ -26,6 +26,102 @@ const MonacoEditor = dynamic(() => import('@monaco-editor/react'), {
   ),
 });
 
+const CODE_STARTER_TEMPLATES: Record<string, string> = {
+  typescript: `// Low-Level Design Implementation (TypeScript)
+// Define your core entities, interfaces, and design patterns here
+
+export interface IStrategy {
+  execute(): void;
+}
+
+export class Context {
+  constructor(private strategy: IStrategy) {}
+
+  public setStrategy(strategy: IStrategy): void {
+    this.strategy = strategy;
+  }
+
+  public run(): void {
+    this.strategy.execute();
+  }
+}
+`,
+  java: `// Low-Level Design Implementation (Java)
+// Define your core entities, interfaces, and design patterns here
+
+public interface Strategy {
+    void execute();
+}
+
+public class Context {
+    private Strategy strategy;
+
+    public Context(Strategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public void setStrategy(Strategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public void run() {
+        if (this.strategy != null) {
+            this.strategy.execute();
+        }
+    }
+}
+`,
+  python: `# Low-Level Design Implementation (Python)
+# Define your core entities, interfaces, and design patterns here
+from abc import ABC, abstractmethod
+
+class Strategy(ABC):
+    @abstractmethod
+    def execute(self) -> None:
+        pass
+
+class Context:
+    def __init__(self, strategy: Strategy):
+        self._strategy = strategy
+
+    def set_strategy(self, strategy: Strategy) -> None:
+        self._strategy = strategy
+
+    def run(self) -> None:
+        if self._strategy:
+            self._strategy.execute()
+`,
+  cpp: `// Low-Level Design Implementation (C++)
+// Define your core entities, interfaces, and design patterns here
+#include <iostream>
+#include <memory>
+
+class Strategy {
+public:
+    virtual ~Strategy() = default;
+    virtual void execute() = 0;
+};
+
+class Context {
+private:
+    std::shared_ptr<Strategy> strategy;
+
+public:
+    Context(std::shared_ptr<Strategy> strategy) : strategy(std::move(strategy)) {}
+
+    void setStrategy(std::shared_ptr<Strategy> newStrategy) {
+        strategy = std::move(newStrategy);
+    }
+
+    void run() {
+        if (strategy) {
+            strategy->execute();
+        }
+    }
+};
+`,
+};
+
 export default function PracticeWorkspacePage() {
   const params = useParams();
   const router = useRouter();
@@ -42,10 +138,22 @@ export default function PracticeWorkspacePage() {
   const [tradeoffs, setTradeoffs] = useState('');
 
   // Code fields
-  const [code, setCode] = useState(
-    `// Low-Level Design Implementation\n// Define your core entities, interfaces, and design patterns here\n\nexport interface IStrategy {\n  execute(): void;\n}\n\nexport class Context {\n  constructor(private strategy: IStrategy) {}\n}\n`,
-  );
   const [language, setLanguage] = useState('typescript');
+  const [code, setCode] = useState(CODE_STARTER_TEMPLATES.typescript);
+
+  const handleLanguageChange = (newLang: string) => {
+    // If editor has empty or default starter code, switch to the template for new language
+    const isStarterTemplate =
+      !code.trim() ||
+      code.trim() ===
+        `// Low-Level Design Implementation\n// Define your core entities, interfaces, and design patterns here\n\nexport interface IStrategy {\n  execute(): void;\n}\n\nexport class Context {\n  constructor(private strategy: IStrategy) {}\n}`.trim() ||
+      Object.values(CODE_STARTER_TEMPLATES).some((tpl) => tpl.trim() === code.trim());
+
+    if (isStarterTemplate && CODE_STARTER_TEMPLATES[newLang]) {
+      setCode(CODE_STARTER_TEMPLATES[newLang]);
+    }
+    setLanguage(newLang);
+  };
 
   // Mandatory design rationale
   const [designRationale, setDesignRationale] = useState('');
@@ -248,12 +356,13 @@ export default function PracticeWorkspacePage() {
             {activeFormat === 'CODE' && (
               <select
                 value={language}
-                onChange={(e) => setLanguage(e.target.value)}
+                onChange={(e) => handleLanguageChange(e.target.value)}
                 className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-xs font-mono text-zinc-200 focus:outline-none focus:border-indigo-500"
               >
                 <option value="typescript">TypeScript</option>
                 <option value="java">Java</option>
                 <option value="python">Python</option>
+                <option value="cpp">C++</option>
               </select>
             )}
           </div>
